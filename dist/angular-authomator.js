@@ -31,6 +31,9 @@
       // Url of Authomator service
       authomatorUrl: '',
 
+      // Whether or not to automatically refresh token
+      automaticallyRefreshTokens: true,
+
       // Function to check if state can be accessed
       // Use in combination with ui-router
       // Returns true to grant access, false to deny access
@@ -93,6 +96,13 @@
     this._refreshToken = null;
 
     /**
+     * Initializes the service and attaches required hooks
+     * during run phase of angular module
+     */
+    this.init = function init(){
+    };
+
+    /**
      * Set access token
      *
      * @param {string} - Access token
@@ -153,6 +163,24 @@
     };
 
   }
+
+  /**
+   * Initalize authomator during run phase
+   *
+   * @param authomator
+   */
+  function initializeAutomatorService(authomator){
+    authomator.init();
+  }
+
+  // Inject dependencies
+  initializeAutomatorService.$inject = ['authomator'];
+
+  // Make sure init() is called during run phase
+  // to set up required hooks
+  angular
+    .module('authomator')
+    .run(initializeAutomatorService);
 
   // Export
   angular
