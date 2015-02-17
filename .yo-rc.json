@@ -1,0 +1,29 @@
+{
+  "generator-angularjs-library": {
+    "props": {
+      "author": {
+        "name": "Jurgen Van de Moere",
+        "email": "jurgen.van.de.moere@gmail.com"
+      },
+      "libraryName": {
+        "original": "angular-authomator",
+        "camelized": "angularAuthomator",
+        "dasherized": "angular-authomator",
+        "slugified": "angular-authomator",
+        "parts": [
+          "angular",
+          "authomator"
+        ]
+      },
+      "includeModuleDirectives": false,
+      "includeModuleFilters": false,
+      "includeModuleServices": true,
+      "includeAngularModuleResource": false,
+      "includeAngularModuleCookies": false,
+      "includeAngularModuleSanitize": false,
+      "librarySrcDirectory": "src/angular-authomator",
+      "libraryUnitTestDirectory": "test/unit/angular-authomator",
+      "libraryUnitE2eDirectory": "test/e2e/angular-authomator"
+    }
+  }
+}
