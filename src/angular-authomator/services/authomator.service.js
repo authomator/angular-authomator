@@ -1,12 +1,5 @@
 (function (angular) {
 
-  // Config
-  angular.module('authomator', []);
-
-})(angular);
-
-(function (angular) {
-
   /**
    * Authomator provider
    */
