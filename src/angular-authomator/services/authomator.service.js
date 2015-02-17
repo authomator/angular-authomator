@@ -60,9 +60,19 @@
      * @param $rootScope
      * @returns {GrowlNotifications}
      */
-    this.$get = function () {
-      return new AuthomatorService(options);
-    };
+    this.$get = authomatorServiceFactory;
+
+    /**
+     * Service factory
+     *
+     * @constructor
+     */
+    function authomatorServiceFactory($rootScope, jwtHelpers){
+      return new AuthomatorService($rootScope, jwtHelpers, options);
+    }
+
+    // Inject dependencies
+    authomatorServiceFactory.$inject = ['$rootScope', 'jwtHelpers'];
 
   }
 
@@ -71,7 +81,7 @@
    *
    * @constructor
    */
-  function AuthomatorService(options) {
+  function AuthomatorService($rootScope, jwtHelpers, options) {
 
     /**
      * Placeholder for internal options
@@ -102,7 +112,9 @@
      * @returns {AuthomatorService} self
      */
     this.setAccessToken = function setAccessToken(token){
+      var decoded = jwtHelpers.decodeToken(token);
       this._accessToken = token;
+      $rootScope.$emit('authomator.accessTokenUpdated', decoded);
       return this;
     };
 
@@ -122,7 +134,9 @@
      * @returns {AuthomatorService} self
      */
     this.setIdentityToken = function setIdentityToken(token){
+      var decoded = jwtHelpers.decodeToken(token);
       this._identityToken = token;
+      $rootScope.$emit('authomator.identityTokenUpdated', decoded);
       return this;
     };
 
@@ -142,7 +156,9 @@
      * @returns {AuthomatorService} self
      */
     this.setRefreshToken = function setRefreshToken(token){
+      var decoded = jwtHelpers.decodeToken(token);
       this._refreshToken = token;
+      $rootScope.$emit('authomator.refreshTokenUpdated', decoded);
       return this;
     };
 

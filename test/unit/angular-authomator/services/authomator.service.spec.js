@@ -2,6 +2,7 @@
 
 describe('authomator', function() {
 
+  var $rootScope;
   var authomatorProvider;
   var authomator;
 
@@ -36,7 +37,8 @@ describe('authomator', function() {
     module('authomator', 'fakeModule');
 
     // Instantiate service
-    inject(function(_authomator_){
+    inject(function(_$rootScope_, _authomator_){
+      $rootScope = _$rootScope_;
       authomator = _authomator_;
     });
   });
@@ -60,6 +62,19 @@ describe('authomator', function() {
       expect(authomator._options.accessTokenQueryStringKey).to.equal(defaultOptions.accessTokenQueryStringKey);
       expect(authomator._options.identityTokenQueryStringKey).to.equal(defaultOptions.identityTokenQueryStringKey);
       expect(authomator._options.refreshTokenQueryStringKey).to.equal(defaultOptions.refreshTokenQueryStringKey);
+    });
+
+    describe('#setAccessToken(token)', function(){
+
+      it('should emit an authomator.accessTokenUpdated event on $rootScope and pass the decoded token contents', function(done){
+
+        $rootScope.$on('authomator.accessTokenUpdated', function(event, decoded){
+          expect(decoded).to.deep.equal(tokenOneDecoded);
+          done();
+        });
+        authomator.setAccessToken(tokenOneEncoded);
+      });
+
     });
 
     describe('#setAccessToken(invalidToken)', function(){
@@ -88,6 +103,19 @@ describe('authomator', function() {
 
     });
 
+    describe('#setIdentityToken(token)', function(){
+
+      it('should emit an authomator.identityTokenUpdated event on $rootScope and pass the decoded token contents', function(done){
+
+        $rootScope.$on('authomator.identityTokenUpdated', function(event, decoded){
+          expect(decoded).to.deep.equal(tokenOneDecoded);
+          done();
+        });
+        authomator.setIdentityToken(tokenOneEncoded);
+      });
+
+    });
+
     describe('#setIdentityToken(invalidToken)', function(){
 
       it('should set the identity token', function(){
@@ -110,6 +138,19 @@ describe('authomator', function() {
         authomator.setIdentityToken(token);
         expect(authomator.getIdentityToken()).to.equal(tokenOneEncoded);
 
+      });
+
+    });
+
+    describe('#setRefreshToken(token)', function(){
+
+      it('should emit an authomator.refreshTokenUpdated event on $rootScope and pass the decoded token contents', function(done){
+
+        $rootScope.$on('authomator.refreshTokenUpdated', function(event, decoded){
+          expect(decoded).to.deep.equal(tokenOneDecoded);
+          done();
+        });
+        authomator.setRefreshToken(tokenOneEncoded);
       });
 
     });

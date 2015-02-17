@@ -53,11 +53,11 @@
       var parts = token.split('.');
       var decoded;
       if (parts.length !== 3) {
-        throw new Error('JWT must have 3 parts');
+        return null;
       }
       decoded = this.urlBase64Decode(parts[1]);
       if (!decoded) {
-        throw new Error('Cannot decode the token');
+        return null;
       }
       return JSON.parse(decoded);
     };

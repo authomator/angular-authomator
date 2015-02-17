@@ -86,6 +86,33 @@ jwtHelpers.isTokenExpired(token); // true/false
 var decoded = jwtHelpers.decodeToken(token); // Decoded token
 ```
 
+## Events
+
+The following events are emitted on `$rootScope`:
+
+```javascript
+// Listen for an updated access token
+$rootScope.$on('authomator.accessTokenUpdated', function(event, decoded){
+  // ...
+});
+
+// Listen for an updated identity token
+$rootScope.$on('authomator.identityTokenUpdated', function(event, decoded){
+  // ...
+});
+
+// Listen for an updated refresh token
+$rootScope.$on('authomator.refreshTokenUpdated', function(event, decoded){
+  // ...
+});
+
+```
+
+For optimal performance, events are **emitted** on `$rootScope`, not **broadcasted**,
+so you have to listen on `$rootScope` to hear them.
+
+Listening on child `$scope` instances will not work.
+
 ## Change log
 
 ### v0.1.0
