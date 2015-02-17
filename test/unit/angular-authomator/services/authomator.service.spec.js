@@ -5,6 +5,15 @@ describe('authomator', function() {
   var authomatorProvider;
   var authomator;
 
+  // Sample tokens generated on http://jwt.io/
+  var tokenOneDecoded = {
+    "sub": 1234567890,
+    "name": "Jurgen Van de Moere",
+    "admin": true
+  };
+  var tokenOneEncoded = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEyMzQ1Njc4OTAsIm5hbWUiOiJKdXJnZW4gVmFuIGRlIE1vZXJlIiwiYWRtaW4iOnRydWV9.LIUWACi2-HTrH5aytl0GGVXH2kUorDOpYa2zODQeafs';
+
+
   var defaultOptions = {
     authomatorUrl: '',
     statePredicateFunction: function(){ return true; },
@@ -51,6 +60,84 @@ describe('authomator', function() {
       expect(authomator._options.accessTokenQueryStringKey).to.equal(defaultOptions.accessTokenQueryStringKey);
       expect(authomator._options.identityTokenQueryStringKey).to.equal(defaultOptions.identityTokenQueryStringKey);
       expect(authomator._options.refreshTokenQueryStringKey).to.equal(defaultOptions.refreshTokenQueryStringKey);
+    });
+
+    describe('#setAccessToken(invalidToken)', function(){
+
+      it('should set the access token', function(){
+
+        var token = "dummyToken";
+        expect(authomator.getAccessToken()).to.not.equal(token);
+        authomator.setAccessToken(token);
+        expect(authomator.getAccessToken()).to.equal(token);
+
+      });
+
+    });
+
+    describe('#setAccessToken(validToken)', function(){
+
+      it('should set the access token', function(){
+
+        var token = tokenOneEncoded;
+        expect(authomator.getAccessToken()).to.not.equal(tokenOneEncoded);
+        authomator.setAccessToken(token);
+        expect(authomator.getAccessToken()).to.equal(tokenOneEncoded);
+
+      });
+
+    });
+
+    describe('#setIdentityToken(invalidToken)', function(){
+
+      it('should set the identity token', function(){
+
+        var token = "dummyToken";
+        expect(authomator.getIdentityToken()).to.not.equal(token);
+        authomator.setIdentityToken(token);
+        expect(authomator.getIdentityToken()).to.equal(token);
+
+      });
+
+    });
+
+    describe('#setIdentityToken(validToken)', function(){
+
+      it('should set the identity token', function(){
+
+        var token = tokenOneEncoded;
+        expect(authomator.getIdentityToken()).to.not.equal(tokenOneEncoded);
+        authomator.setIdentityToken(token);
+        expect(authomator.getIdentityToken()).to.equal(tokenOneEncoded);
+
+      });
+
+    });
+
+    describe('#setRefreshToken(invalidToken)', function(){
+
+      it('should set the refresh token', function(){
+
+        var token = "dummyToken";
+        expect(authomator.getRefreshToken()).to.not.equal(token);
+        authomator.setRefreshToken(token);
+        expect(authomator.getRefreshToken()).to.equal(token);
+
+      });
+
+    });
+
+    describe('#setRefreshToken(validToken)', function(){
+
+      it('should set the refresh token', function(){
+
+        var token = tokenOneEncoded;
+        expect(authomator.getRefreshToken()).to.not.equal(tokenOneEncoded);
+        authomator.setRefreshToken(token);
+        expect(authomator.getRefreshToken()).to.equal(tokenOneEncoded);
+
+      });
+
     });
 
   });

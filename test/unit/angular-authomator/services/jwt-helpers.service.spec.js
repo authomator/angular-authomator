@@ -9,7 +9,7 @@ describe('jwtHelpers', function() {
     "sub": 1234567890,
     "name": "Jurgen Van de Moere",
     "admin": true
-  }
+  };
   var tokenOneEncoded = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEyMzQ1Njc4OTAsIm5hbWUiOiJKdXJnZW4gVmFuIGRlIE1vZXJlIiwiYWRtaW4iOnRydWV9.LIUWACi2-HTrH5aytl0GGVXH2kUorDOpYa2zODQeafs';
 
   beforeEach(module('authomator'));

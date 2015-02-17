@@ -1,9 +1,9 @@
 (function (angular) {
 
   /**
-   * Authomator provider
+   * Authomator service provider
    */
-  function authomatorProvider(){
+  function authomatorServiceProvider(){
 
     /**
      * Dummy predicate function that
@@ -58,18 +58,91 @@
      * @returns {GrowlNotifications}
      */
     this.$get = function () {
+      return new AuthomatorService(options);
+    };
 
-      /**
-       * Constructor
-       *
-       * @constructor
-       */
-      function Authomator() {
-        this._options = options;
-      }
+  }
 
-      return new Authomator();
+  /**
+   * Authomator service
+   *
+   * @constructor
+   */
+  function AuthomatorService(options) {
 
+    /**
+     * Placeholder for internal options
+     */
+    this._options = options;
+
+    /**
+     * Placeholder for tokens
+     *
+     * @type {null}
+     * @private
+     */
+    this._accessToken = null;
+    this._identityToken = null;
+    this._refreshToken = null;
+
+    /**
+     * Set access token
+     *
+     * @param {string} - Access token
+     * @returns {AuthomatorService} self
+     */
+    this.setAccessToken = function setAccessToken(token){
+      this._accessToken = token;
+      return this;
+    };
+
+    /**
+     * Get access token
+     *
+     * @returns {string} token
+     */
+    this.getAccessToken = function getAccessToken(){
+      return this._accessToken;
+    };
+
+    /**
+     * Set identity token
+     *
+     * @param {string} - Identity token
+     * @returns {AuthomatorService} self
+     */
+    this.setIdentityToken = function setIdentityToken(token){
+      this._identityToken = token;
+      return this;
+    };
+
+    /**
+     * Get identity token
+     *
+     * @returns {string} token
+     */
+    this.getIdentityToken = function getIdentityToken(){
+      return this._identityToken;
+    };
+
+    /**
+     * Set refresh token
+     *
+     * @param {string} - Refresh token
+     * @returns {AuthomatorService} self
+     */
+    this.setRefreshToken = function setRefreshToken(token){
+      this._refreshToken = token;
+      return this;
+    };
+
+    /**
+     * Get refresh token
+     *
+     * @returns {string} token
+     */
+    this.getRefreshToken = function getRefreshToken(){
+      return this._refreshToken;
     };
 
   }
@@ -77,6 +150,6 @@
   // Export
   angular
     .module('authomator')
-    .provider('authomator', authomatorProvider);
+    .provider('authomator', authomatorServiceProvider);
 
 })(angular);
