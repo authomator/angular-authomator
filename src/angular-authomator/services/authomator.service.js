@@ -65,7 +65,7 @@
        * @constructor
        */
       function Authomator() {
-        this.options = options;
+        this._options = options;
       }
 
       return new Authomator();

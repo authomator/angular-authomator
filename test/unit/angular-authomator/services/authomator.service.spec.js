@@ -5,6 +5,15 @@ describe('authomator', function() {
   var authomatorProvider;
   var authomator;
 
+  var defaultOptions = {
+    authomatorUrl: '',
+    statePredicateFunction: function(){ return true; },
+    routePredicateFunction: function(){ return true; },
+    accessTokenQueryStringKey: 'at',
+    identityTokenQueryStringKey: 'it',
+    refreshTokenQueryStringKey: 'rt'
+  };
+
   beforeEach(function(){
 
     // Define a fake module so we can configure the provider
@@ -35,6 +44,13 @@ describe('authomator', function() {
 
     it('should exist', function () {
       expect(authomator).to.be.an('object');
+    });
+
+    it('should correctly initialize the default options', function () {
+      expect(authomator._options.authomatorUrl).to.equal(defaultOptions.authomatorUrl);
+      expect(authomator._options.accessTokenQueryStringKey).to.equal(defaultOptions.accessTokenQueryStringKey);
+      expect(authomator._options.identityTokenQueryStringKey).to.equal(defaultOptions.identityTokenQueryStringKey);
+      expect(authomator._options.refreshTokenQueryStringKey).to.equal(defaultOptions.refreshTokenQueryStringKey);
     });
 
   });
