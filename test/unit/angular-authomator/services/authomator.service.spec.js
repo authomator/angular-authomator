@@ -18,8 +18,6 @@ describe('authomator', function() {
 
   var defaultOptions = {
     authomatorUrl: '',
-    statePredicateFunction: sinon.spy(),
-    routePredicateFunction: sinon.spy(),
     accessTokenQueryStringKey: 'at',
     identityTokenQueryStringKey: 'it',
     refreshTokenQueryStringKey: 'rt'
@@ -65,18 +63,6 @@ describe('authomator', function() {
       expect(authomator._options.accessTokenQueryStringKey).to.equal(defaultOptions.accessTokenQueryStringKey);
       expect(authomator._options.identityTokenQueryStringKey).to.equal(defaultOptions.identityTokenQueryStringKey);
       expect(authomator._options.refreshTokenQueryStringKey).to.equal(defaultOptions.refreshTokenQueryStringKey);
-    });
-
-    it('should run routePredicateFunction on $routeChangeStart event', function(){
-      expect(defaultOptions.routePredicateFunction).to.not.have.been.called;
-      $rootScope.$broadcast('$routeChangeStart');
-      expect(defaultOptions.routePredicateFunction).to.have.been.called;
-    });
-
-    it('should run statePredicateFunction on $stateChangeStart event', function(){
-      expect(defaultOptions.statePredicateFunction).to.not.have.been.called;
-      $rootScope.$broadcast('$stateChangeStart');
-      expect(defaultOptions.statePredicateFunction).to.have.been.called;
     });
 
     it('should listen for query string keys', function(){
@@ -198,6 +184,24 @@ describe('authomator', function() {
         expect(authomator.getRefreshToken()).to.not.equal(tokenOneEncoded);
         authomator.setRefreshToken(token);
         expect(authomator.getRefreshToken()).to.equal(tokenOneEncoded);
+      });
+
+    });
+
+    describe('#resetAllTokens()', function(){
+
+      it('should reset all tokens', function(){
+        var token = 'test';
+        authomator.setAccessToken(token)
+        authomator.setIdentityToken(token)
+        authomator.setRefreshToken(token)
+        expect(authomator.getAccessToken()).to.equal(token);
+        expect(authomator.getIdentityToken()).to.equal(token);
+        expect(authomator.getRefreshToken()).to.equal(token);
+        authomator.resetAllTokens();
+        expect(authomator.getAccessToken()).to.equal(null);
+        expect(authomator.getIdentityToken()).to.equal(null);
+        expect(authomator.getRefreshToken()).to.equal(null);
       });
 
     });

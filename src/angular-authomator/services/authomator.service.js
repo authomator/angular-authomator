@@ -14,16 +14,6 @@
       // Whether or not to automatically refresh token
       automaticallyRefreshTokens: true,
 
-      // Function to check if state can be accessed
-      // Use in combination with ui-router
-      // Returns true to grant access, false to deny access
-      statePredicateFunction: null,
-
-      // Function to check if route can be accessed
-      // Used in combination with ngRoute
-      // Returns true to grant access, false to deny access
-      routePredicateFunction: null,
-
       // Keys to identify tokens in query string
       accessTokenQueryStringKey: 'at',
       identityTokenQueryStringKey: 'it',
@@ -91,34 +81,6 @@
      */
     this.init = function init(){
       this._listenForQueryStringKeys();
-      this._listenForRouteChanges();
-      this._listenForStateChanges();
-    };
-
-    /**
-     * Listen for route changes when using ngRoute
-     */
-    this._listenForRouteChanges = function listenForRouteChanges(){
-      var self = this;
-      if(!angular.isFunction(this._options.routePredicateFunction)){
-        return;
-      }
-      $rootScope.$on('$routeChangeStart', function(event, to, from){
-        self._options.routePredicateFunction(event, to, from);
-      });
-    };
-
-    /**
-     * Listen for state changes when using ui-router
-     */
-    this._listenForStateChanges = function listenForStateChanges(){
-      var self = this;
-      if(!angular.isFunction(this._options.statePredicateFunction)){
-        return;
-      }
-      $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
-        self._options.statePredicateFunction(event, toState, toParams, fromState, fromParams);
-      });
     };
 
     /**
@@ -208,6 +170,15 @@
      */
     this.getRefreshToken = function getRefreshToken(){
       return this._refreshToken;
+    };
+
+    /**
+     * Convenience function to reset all tokens
+     */
+    this.resetAllTokens = function resetAllTokens(){
+      this.setAccessToken(null);
+      this.setIdentityToken(null);
+      this.setRefreshToken(null);
     };
 
   }

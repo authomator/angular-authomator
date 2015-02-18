@@ -50,6 +50,9 @@
      * @returns {object} - Decoded token
      */
     this.decodeToken = function (token) {
+      if(!(token && token.split)){
+        return null;
+      }
       var parts = token.split('.');
       var decoded;
       if (parts.length !== 3) {
