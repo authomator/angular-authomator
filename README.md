@@ -143,6 +143,8 @@ Listening on child `$scope` instances will not work.
 
 ### v0.1.0
 
+- Added example page
+- Added query string parsing
 - Added authomator service
 - Added jwtHelpers service
 - Added unit tests
