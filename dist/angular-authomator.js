@@ -24,7 +24,12 @@
       // Keys to identify tokens in query string
       accessTokenQueryStringKey: 'at',
       identityTokenQueryStringKey: 'it',
-      refreshTokenQueryStringKey: 'rt'
+      refreshTokenQueryStringKey: 'rt',
+
+      // Url's
+      urls: {
+        login: 'login'
+      }
     };
 
     /**
@@ -204,6 +209,31 @@
      */
     this.removeRefreshToken = function removeRefreshToken(){
       this.setRefreshToken(null);
+    };
+
+    /**
+     * Get login url
+     *
+     * @returns {*}
+     */
+    this.getLoginUrl = function getLoginUrl(){
+      return this._prefixUrl(this._options.urls.login);
+    };
+
+    /**
+     * Prefix a url with the authomator url
+     *
+     * @param url
+     */
+    this._prefixUrl = function prefixUrl(url){
+      var prefix = this._options.authomatorUrl;
+      if(!prefix){
+        return url;
+      }
+      if(prefix.charAt(prefix.length - 1) !== '/'){
+        prefix += '/';
+      }
+      return prefix + url;
     };
 
   }

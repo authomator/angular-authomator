@@ -16,8 +16,8 @@ describe('authomator', function() {
   var tokenOneEncoded = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEyMzQ1Njc4OTAsIm5hbWUiOiJKdXJnZW4gVmFuIGRlIE1vZXJlIiwiYWRtaW4iOnRydWV9.LIUWACi2-HTrH5aytl0GGVXH2kUorDOpYa2zODQeafs';
 
 
-  var defaultOptions = {
-    authomatorUrl: '',
+  var testOptions = {
+    authomatorUrl: 'http://url-to-authomator-service',
     accessTokenQueryStringKey: 'at',
     identityTokenQueryStringKey: 'it',
     refreshTokenQueryStringKey: 'rt'
@@ -30,7 +30,7 @@ describe('authomator', function() {
     var fakeModule = angular.module('fakeModule', function(){});
     fakeModule.config(['authomatorProvider', function(_authomatorProvider_){
       authomatorProvider = _authomatorProvider_;
-      authomatorProvider.setOptions(defaultOptions);
+      authomatorProvider.setOptions(testOptions);
     }]);
 
     // Load module
@@ -59,10 +59,10 @@ describe('authomator', function() {
     });
 
     it('should correctly initialize the default options', function () {
-      expect(authomator._options.authomatorUrl).to.equal(defaultOptions.authomatorUrl);
-      expect(authomator._options.accessTokenQueryStringKey).to.equal(defaultOptions.accessTokenQueryStringKey);
-      expect(authomator._options.identityTokenQueryStringKey).to.equal(defaultOptions.identityTokenQueryStringKey);
-      expect(authomator._options.refreshTokenQueryStringKey).to.equal(defaultOptions.refreshTokenQueryStringKey);
+      expect(authomator._options.authomatorUrl).to.equal(testOptions.authomatorUrl);
+      expect(authomator._options.accessTokenQueryStringKey).to.equal(testOptions.accessTokenQueryStringKey);
+      expect(authomator._options.identityTokenQueryStringKey).to.equal(testOptions.identityTokenQueryStringKey);
+      expect(authomator._options.refreshTokenQueryStringKey).to.equal(testOptions.refreshTokenQueryStringKey);
     });
 
     it('should listen for query string keys', function(){
@@ -71,9 +71,9 @@ describe('authomator', function() {
       var dummyRefreshToken = 'dummyRefreshToken';
 
       var newUrl = '?';
-      newUrl += defaultOptions.accessTokenQueryStringKey + '=' + dummyAccessToken;
-      newUrl += '&' + defaultOptions.identityTokenQueryStringKey + '=' + dummyIdentityToken;
-      newUrl += '&' + defaultOptions.refreshTokenQueryStringKey + '=' + dummyRefreshToken;
+      newUrl += testOptions.accessTokenQueryStringKey + '=' + dummyAccessToken;
+      newUrl += '&' + testOptions.identityTokenQueryStringKey + '=' + dummyIdentityToken;
+      newUrl += '&' + testOptions.refreshTokenQueryStringKey + '=' + dummyRefreshToken;
 
       expect(authomator.getAccessToken()).to.not.equal(dummyAccessToken);
       expect(authomator.getIdentityToken()).to.not.equal(dummyIdentityToken);
@@ -122,7 +122,7 @@ describe('authomator', function() {
 
     describe('#removeAccessToken()', function(){
 
-      it('should reset all tokens', function(){
+      it('should remove access token', function(){
         var token = 'test';
         authomator.setAccessToken(token)
         expect(authomator.getAccessToken()).to.equal(token);
@@ -169,7 +169,7 @@ describe('authomator', function() {
 
     describe('#removeIdentityToken()', function(){
 
-      it('should reset all tokens', function(){
+      it('should remove identity token', function(){
         var token = 'test';
         authomator.setIdentityToken(token)
         expect(authomator.getIdentityToken()).to.equal(token);
@@ -215,12 +215,20 @@ describe('authomator', function() {
 
     describe('#removeRefreshToken()', function(){
 
-      it('should reset all tokens', function(){
+      it('should remove refresh token', function(){
         var token = 'test';
         authomator.setRefreshToken(token)
         expect(authomator.getRefreshToken()).to.equal(token);
         authomator.removeRefreshToken();
         expect(authomator.getRefreshToken()).to.equal(null);
+      });
+
+    });
+
+    describe('#getLoginUrl()', function(){
+
+      it('should return correct url', function(){
+        expect(authomator.getLoginUrl()).to.equal(testOptions.authomatorUrl + '/login');
       });
 
     });
