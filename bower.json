@@ -7,12 +7,20 @@
       "email": "jurgen.van.de.moere@gmail.com"
     }
   ],
+  "keywords": [
+    "angular",
+    "angularjs",
+    "authomator",
+    "auth",
+    "authentication"
+  ],
   "main": ["dist/angular-authomator.js"],
   "ignore": [
     "src",
     "test",
     "Gruntfile.js",
-    "**/.*"
+    "**/.*",
+    "karma*.conf.js"
   ],
   "dependencies": {},
   "devDependencies": {
