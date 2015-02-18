@@ -229,6 +229,8 @@ describe('authomator', function() {
 
       it('should return correct url', function(){
         expect(authomator.getLoginUrl()).to.equal(testOptions.authomatorUrl + '/login');
+        authomator._options.authomatorUrl += '/';
+        expect(authomator.getLoginUrl()).to.equal(testOptions.authomatorUrl + '/login');
       });
 
     });
