@@ -1,0 +1,30 @@
+<html ng-app="app">
+<head>
+  <title>Simple demo application</title>
+  <script src="../../bower/angular/angular.js"></script>
+  <script src="../../dist/angular-authomator.js"></script>
+  <script src="app.js"></script>
+</head>
+<body ng-controller="DemoCtrl">
+<h1>Simple demo app</h1>
+<p>Click on the links below to see how the service automatically parses and decodes some sample tokens from the query string:</p>
+<ul>
+  <li>
+    <a href="?at={{sampleAccessToken1}}&it={{sampleIdentityToken1}}&rt={{sampleRefreshToken1}}">
+      Try sample URL 1 with access token 1, identity token 1 and refresh token 1
+    </a>
+  </li>
+  <li>
+    <a href="?at={{sampleAccessToken2}}&it={{sampleIdentityToken2}}&rt={{sampleRefreshToken2}}">
+      Try sample URL 2 with access token 2, identity token 2 and refresh token 2
+    </a>
+  </li>
+</ul>
+<h3>Access token</h3>
+<pre>{{ accessToken | json}}</pre>
+<h3>Identity token</h3>
+<pre>{{ identityToken | json}}</pre>
+<h3>Refresh token</h3>
+<pre>{{ refreshToken | json}}</pre>
+</body>
+</html>
