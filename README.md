@@ -87,17 +87,27 @@ authomator.setAccessToken(token);
 // Get access token
 var accessToken = authomator.getAccessToken();
 
+// Remove access token
+authomator.removeAccessToken();
+
 // Set identity token
 authomator.setIdentityToken(token);
 
-// Get access token
+// Get identity token
 var identityToken = authomator.getIdentityToken();
+
+// Remove identity token
+authomator.removeIdentityToken();
 
 // Set refresh token
 authomator.setRefreshToken(token);
 
-// Get access token
+// Get refresh token
 var refreshToken = authomator.getRefreshToken();
+
+// Remove refresh token
+authomator.removeRefreshToken();
+
 ```
 
 ## jwtHelpers service

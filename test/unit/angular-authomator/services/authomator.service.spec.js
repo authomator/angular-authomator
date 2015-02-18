@@ -120,6 +120,18 @@ describe('authomator', function() {
 
     });
 
+    describe('#removeAccessToken()', function(){
+
+      it('should reset all tokens', function(){
+        var token = 'test';
+        authomator.setAccessToken(token)
+        expect(authomator.getAccessToken()).to.equal(token);
+        authomator.removeAccessToken();
+        expect(authomator.getAccessToken()).to.equal(null);
+      });
+
+    });
+
     describe('#setIdentityToken(token)', function(){
 
       it('should emit an authomator.identityTokenUpdated event on $rootScope and pass the decoded token contents', function(done){
@@ -150,6 +162,19 @@ describe('authomator', function() {
         expect(authomator.getIdentityToken()).to.not.equal(tokenOneEncoded);
         authomator.setIdentityToken(token);
         expect(authomator.getIdentityToken()).to.equal(tokenOneEncoded);
+      });
+
+    });
+
+
+    describe('#removeIdentityToken()', function(){
+
+      it('should reset all tokens', function(){
+        var token = 'test';
+        authomator.setIdentityToken(token)
+        expect(authomator.getIdentityToken()).to.equal(token);
+        authomator.removeIdentityToken();
+        expect(authomator.getIdentityToken()).to.equal(null);
       });
 
     });
@@ -188,19 +213,13 @@ describe('authomator', function() {
 
     });
 
-    describe('#resetAllTokens()', function(){
+    describe('#removeRefreshToken()', function(){
 
       it('should reset all tokens', function(){
         var token = 'test';
-        authomator.setAccessToken(token)
-        authomator.setIdentityToken(token)
         authomator.setRefreshToken(token)
-        expect(authomator.getAccessToken()).to.equal(token);
-        expect(authomator.getIdentityToken()).to.equal(token);
         expect(authomator.getRefreshToken()).to.equal(token);
-        authomator.resetAllTokens();
-        expect(authomator.getAccessToken()).to.equal(null);
-        expect(authomator.getIdentityToken()).to.equal(null);
+        authomator.removeRefreshToken();
         expect(authomator.getRefreshToken()).to.equal(null);
       });
 

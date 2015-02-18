@@ -129,6 +129,15 @@
     };
 
     /**
+     * Remove access token
+     *
+     * @returns {AuthomatorService} self
+     */
+    this.removeAccessToken = function removeAccessToken(){
+      this.setAccessToken(null);
+    };
+
+    /**
      * Set identity token
      *
      * @param {string} - Identity token
@@ -148,6 +157,15 @@
      */
     this.getIdentityToken = function getIdentityToken(){
       return this._identityToken;
+    };
+
+    /**
+     * Remove identity token
+     *
+     * @returns {AuthomatorService} self
+     */
+    this.removeIdentityToken = function removeIdentityToken(){
+      this.setIdentityToken(null);
     };
 
     /**
@@ -173,11 +191,11 @@
     };
 
     /**
-     * Convenience function to reset all tokens
+     * Remove refresh token
+     *
+     * @returns {AuthomatorService} self
      */
-    this.resetAllTokens = function resetAllTokens(){
-      this.setAccessToken(null);
-      this.setIdentityToken(null);
+    this.removeRefreshToken = function removeRefreshToken(){
       this.setRefreshToken(null);
     };
 
