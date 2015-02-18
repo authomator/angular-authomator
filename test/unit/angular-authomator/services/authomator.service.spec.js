@@ -83,17 +83,17 @@ describe('authomator', function() {
       var dummyAccessToken = 'dummyAccessToken';
       var dummyIdentityToken = 'dummyIdentityToken';
       var dummyRefreshToken = 'dummyRefreshToken';
-      var queryString = $location.search();
+
+      var newUrl = '?';
+      newUrl += defaultOptions.accessTokenQueryStringKey + '=' + dummyAccessToken;
+      newUrl += '&' + defaultOptions.identityTokenQueryStringKey + '=' + dummyIdentityToken;
+      newUrl += '&' + defaultOptions.refreshTokenQueryStringKey + '=' + dummyRefreshToken;
 
       expect(authomator.getAccessToken()).to.not.equal(dummyAccessToken);
       expect(authomator.getIdentityToken()).to.not.equal(dummyIdentityToken);
       expect(authomator.getRefreshToken()).to.not.equal(dummyRefreshToken);
 
-      queryString[defaultOptions.accessTokenQueryStringKey] = dummyAccessToken;
-      queryString[defaultOptions.identityTokenQueryStringKey] = dummyIdentityToken;
-      queryString[defaultOptions.refreshTokenQueryStringKey] = dummyRefreshToken;
-
-      $rootScope.$broadcast('$locationChangeStart');
+      $rootScope.$broadcast('$locationChangeStart', newUrl);
 
       expect(authomator.getAccessToken()).to.equal(dummyAccessToken);
       expect(authomator.getIdentityToken()).to.equal(dummyIdentityToken);

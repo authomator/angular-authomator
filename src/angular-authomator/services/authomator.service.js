@@ -127,8 +127,8 @@
      */
     this._listenForQueryStringKeys = function listenForQueryStringKeys(){
       var self = this;
-      $rootScope.$on('$locationChangeStart', function(event){
-        var queryString = $location.search();
+      $rootScope.$on('$locationChangeStart', function(event, newUrl, oldUrl){
+        var queryString = parseQueryString(newUrl);
         if(!queryString.hasOwnProperty(self._options.accessTokenQueryStringKey)){
           return;
         }
@@ -223,6 +223,63 @@
 
   // Inject dependencies
   initializeAutomatorService.$inject = ['authomator'];
+
+  /**
+   * Decode URI component and make sure no
+   * errors are thrown
+   *
+   * @param value
+   * @returns {string}
+   */
+  function tryDecodeURIComponent(value) {
+    try {
+      return decodeURIComponent(value);
+    } catch (e) {
+      // Ignore any invalid uri component
+    }
+  }
+
+  /**
+   * Parse an escaped url query string into key-value pairs
+   *
+   * @returns {Object.<string,boolean|Array>}
+   */
+  function parseKeyValue(/**string*/keyValue) {
+    var obj = {}, keyValuePair, key;
+    angular.forEach((keyValue || '').split('&'), function(keyValue) {
+      if (keyValue) {
+        keyValuePair = keyValue.replace(/\+/g,'%20').split('=');
+        key = tryDecodeURIComponent(keyValuePair[0]);
+        if (angular.isDefined(key)) {
+          var val = angular.isDefined(keyValuePair[1]) ? tryDecodeURIComponent(keyValuePair[1]) : true;
+          if (!Object.hasOwnProperty.call(obj, key)) {
+            obj[key] = val;
+          } else if (angular.isArray(obj[key])) {
+            obj[key].push(val);
+          } else {
+            obj[key] = [obj[key],val];
+          }
+        }
+      }
+    });
+    return obj;
+  }
+
+  /**
+   * Parse query string
+   *
+   * Grab part after ? and delegate to parseKeyValue
+   *
+   * @param url
+   * @returns {Object.<string, boolean|Array>}
+   */
+  function parseQueryString(url){
+    var queryString = '';
+    if(url && url.split){
+      queryString = url.split('?')[1];
+    }
+    return parseKeyValue(queryString);
+  }
 
   // Make sure init() is called during run phase
   // to set up required hooks
