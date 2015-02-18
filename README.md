@@ -4,6 +4,10 @@ AngularJS module to authenticate against an [Authomator](https://github.com/auth
 
 [![Build Status](https://travis-ci.org/authomator/angular-authomator.svg?branch=master)](https://travis-ci.org/authomator/angular-authomator)
 
+- lightweight (< 5KB minified)
+- no external dependencies
+- automatically handles Authomator query string parameters
+
 ## Usage
 
 First install the module using bower:
@@ -46,6 +50,28 @@ angular
     var token = authomator.getAccessToken();
     
     // ...
+    
+  });
+```
+
+and listen for Authomator events on `$rootScope`:
+
+```javascript
+angular
+  .module('yourApp')
+  .controller('SomeCtrl', function($rootScope){
+    
+    $rootScope.$on('authomator.accessTokenUpdated', function(){
+      // ...
+    });
+    
+    $rootScope.$on('authomator.identityTokenUpdated', function(){
+      // ...
+    });
+    
+    $rootScope.$on('authomator.refreshTokenUpdated', function(){
+      // ...
+    });
     
   });
 ```
