@@ -5,19 +5,6 @@
    */
   function authomatorServiceProvider(){
 
-    /**
-     * Dummy predicate function that
-     * always returns true and thus
-     * always allows access
-     *
-     * Can be overridden using options.
-     *
-     * @returns {boolean}
-     */
-    function alwaysAllowAccess(){
-      return true;
-    }
-
     // Default options
     var options = {
 
@@ -30,12 +17,12 @@
       // Function to check if state can be accessed
       // Use in combination with ui-router
       // Returns true to grant access, false to deny access
-      statePredicateFunction: alwaysAllowAccess,
+      statePredicateFunction: null,
 
       // Function to check if route can be accessed
       // Used in combination with ngRoute
       // Returns true to grant access, false to deny access
-      routePredicateFunction: alwaysAllowAccess,
+      routePredicateFunction: null,
 
       // Keys to identify tokens in query string
       accessTokenQueryStringKey: 'at',
@@ -67,12 +54,12 @@
      *
      * @constructor
      */
-    function authomatorServiceFactory($rootScope, jwtHelpers){
-      return new AuthomatorService($rootScope, jwtHelpers, options);
+    function authomatorServiceFactory($rootScope, $location, jwtHelpers){
+      return new AuthomatorService($rootScope, $location, jwtHelpers, options);
     }
 
     // Inject dependencies
-    authomatorServiceFactory.$inject = ['$rootScope', 'jwtHelpers'];
+    authomatorServiceFactory.$inject = ['$rootScope', '$location', 'jwtHelpers'];
 
   }
 
@@ -81,7 +68,7 @@
    *
    * @constructor
    */
-  function AuthomatorService($rootScope, jwtHelpers, options) {
+  function AuthomatorService($rootScope, $location, jwtHelpers, options) {
 
     /**
      * Placeholder for internal options
@@ -103,6 +90,58 @@
      * during run phase of angular module
      */
     this.init = function init(){
+      this._listenForQueryStringKeys();
+      this._listenForRouteChanges();
+      this._listenForStateChanges();
+    };
+
+    /**
+     * Listen for route changes when using ngRoute
+     */
+    this._listenForRouteChanges = function listenForRouteChanges(){
+      var self = this;
+      if(!angular.isFunction(this._options.routePredicateFunction)){
+        return;
+      }
+      $rootScope.$on('$routeChangeStart', function(event, to, from){
+        self._options.routePredicateFunction(event, to, from);
+      });
+    };
+
+    /**
+     * Listen for state changes when using ui-router
+     */
+    this._listenForStateChanges = function listenForStateChanges(){
+      var self = this;
+      if(!angular.isFunction(this._options.statePredicateFunction)){
+        return;
+      }
+      $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
+        self._options.statePredicateFunction(event, toState, toParams, fromState, fromParams);
+      });
+    };
+
+    /**
+     * Listen for keys in the query string and update
+     * tokens if all keys are set
+     */
+    this._listenForQueryStringKeys = function listenForQueryStringKeys(){
+      var self = this;
+      $rootScope.$on('$locationChangeStart', function(event){
+        var queryString = $location.search();
+        if(!queryString.hasOwnProperty(self._options.accessTokenQueryStringKey)){
+          return;
+        }
+        if(!queryString.hasOwnProperty(self._options.identityTokenQueryStringKey)){
+          return;
+        }
+        if(!queryString.hasOwnProperty(self._options.refreshTokenQueryStringKey)){
+          return;
+        }
+        self.setAccessToken(queryString[self._options.accessTokenQueryStringKey]);
+        self.setIdentityToken(queryString[self._options.identityTokenQueryStringKey]);
+        self.setRefreshToken(queryString[self._options.refreshTokenQueryStringKey]);
+      });
     };
 
     /**

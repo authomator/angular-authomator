@@ -3,6 +3,7 @@
 describe('authomator', function() {
 
   var $rootScope;
+  var $location;
   var authomatorProvider;
   var authomator;
 
@@ -17,8 +18,8 @@ describe('authomator', function() {
 
   var defaultOptions = {
     authomatorUrl: '',
-    statePredicateFunction: function(){ return true; },
-    routePredicateFunction: function(){ return true; },
+    statePredicateFunction: sinon.spy(),
+    routePredicateFunction: sinon.spy(),
     accessTokenQueryStringKey: 'at',
     identityTokenQueryStringKey: 'it',
     refreshTokenQueryStringKey: 'rt'
@@ -31,14 +32,16 @@ describe('authomator', function() {
     var fakeModule = angular.module('fakeModule', function(){});
     fakeModule.config(['authomatorProvider', function(_authomatorProvider_){
       authomatorProvider = _authomatorProvider_;
+      authomatorProvider.setOptions(defaultOptions);
     }]);
 
     // Load module
     module('authomator', 'fakeModule');
 
     // Instantiate service
-    inject(function(_$rootScope_, _authomator_){
+    inject(function(_$rootScope_, _$location_, _authomator_){
       $rootScope = _$rootScope_;
+      $location = _$location_;
       authomator = _authomator_;
     });
   });
@@ -64,10 +67,42 @@ describe('authomator', function() {
       expect(authomator._options.refreshTokenQueryStringKey).to.equal(defaultOptions.refreshTokenQueryStringKey);
     });
 
+    it('should run routePredicateFunction on $routeChangeStart event', function(){
+      expect(defaultOptions.routePredicateFunction).to.not.have.been.called;
+      $rootScope.$broadcast('$routeChangeStart');
+      expect(defaultOptions.routePredicateFunction).to.have.been.called;
+    });
+
+    it('should run statePredicateFunction on $stateChangeStart event', function(){
+      expect(defaultOptions.statePredicateFunction).to.not.have.been.called;
+      $rootScope.$broadcast('$stateChangeStart');
+      expect(defaultOptions.statePredicateFunction).to.have.been.called;
+    });
+
+    it('should listen for query string keys', function(){
+      var dummyAccessToken = 'dummyAccessToken';
+      var dummyIdentityToken = 'dummyIdentityToken';
+      var dummyRefreshToken = 'dummyRefreshToken';
+      var queryString = $location.search();
+
+      expect(authomator.getAccessToken()).to.not.equal(dummyAccessToken);
+      expect(authomator.getIdentityToken()).to.not.equal(dummyIdentityToken);
+      expect(authomator.getRefreshToken()).to.not.equal(dummyRefreshToken);
+
+      queryString[defaultOptions.accessTokenQueryStringKey] = dummyAccessToken;
+      queryString[defaultOptions.identityTokenQueryStringKey] = dummyIdentityToken;
+      queryString[defaultOptions.refreshTokenQueryStringKey] = dummyRefreshToken;
+
+      $rootScope.$broadcast('$locationChangeStart');
+
+      expect(authomator.getAccessToken()).to.equal(dummyAccessToken);
+      expect(authomator.getIdentityToken()).to.equal(dummyIdentityToken);
+      expect(authomator.getRefreshToken()).to.equal(dummyRefreshToken);
+    });
+
     describe('#setAccessToken(token)', function(){
 
       it('should emit an authomator.accessTokenUpdated event on $rootScope and pass the decoded token contents', function(done){
-
         $rootScope.$on('authomator.accessTokenUpdated', function(event, decoded){
           expect(decoded).to.deep.equal(tokenOneDecoded);
           done();
@@ -80,12 +115,10 @@ describe('authomator', function() {
     describe('#setAccessToken(invalidToken)', function(){
 
       it('should set the access token', function(){
-
         var token = "dummyToken";
         expect(authomator.getAccessToken()).to.not.equal(token);
         authomator.setAccessToken(token);
         expect(authomator.getAccessToken()).to.equal(token);
-
       });
 
     });
@@ -93,12 +126,10 @@ describe('authomator', function() {
     describe('#setAccessToken(validToken)', function(){
 
       it('should set the access token', function(){
-
         var token = tokenOneEncoded;
         expect(authomator.getAccessToken()).to.not.equal(tokenOneEncoded);
         authomator.setAccessToken(token);
         expect(authomator.getAccessToken()).to.equal(tokenOneEncoded);
-
       });
 
     });
@@ -106,7 +137,6 @@ describe('authomator', function() {
     describe('#setIdentityToken(token)', function(){
 
       it('should emit an authomator.identityTokenUpdated event on $rootScope and pass the decoded token contents', function(done){
-
         $rootScope.$on('authomator.identityTokenUpdated', function(event, decoded){
           expect(decoded).to.deep.equal(tokenOneDecoded);
           done();
@@ -119,12 +149,10 @@ describe('authomator', function() {
     describe('#setIdentityToken(invalidToken)', function(){
 
       it('should set the identity token', function(){
-
         var token = "dummyToken";
         expect(authomator.getIdentityToken()).to.not.equal(token);
         authomator.setIdentityToken(token);
         expect(authomator.getIdentityToken()).to.equal(token);
-
       });
 
     });
@@ -132,12 +160,10 @@ describe('authomator', function() {
     describe('#setIdentityToken(validToken)', function(){
 
       it('should set the identity token', function(){
-
         var token = tokenOneEncoded;
         expect(authomator.getIdentityToken()).to.not.equal(tokenOneEncoded);
         authomator.setIdentityToken(token);
         expect(authomator.getIdentityToken()).to.equal(tokenOneEncoded);
-
       });
 
     });
@@ -145,7 +171,6 @@ describe('authomator', function() {
     describe('#setRefreshToken(token)', function(){
 
       it('should emit an authomator.refreshTokenUpdated event on $rootScope and pass the decoded token contents', function(done){
-
         $rootScope.$on('authomator.refreshTokenUpdated', function(event, decoded){
           expect(decoded).to.deep.equal(tokenOneDecoded);
           done();
@@ -158,12 +183,10 @@ describe('authomator', function() {
     describe('#setRefreshToken(invalidToken)', function(){
 
       it('should set the refresh token', function(){
-
         var token = "dummyToken";
         expect(authomator.getRefreshToken()).to.not.equal(token);
         authomator.setRefreshToken(token);
         expect(authomator.getRefreshToken()).to.equal(token);
-
       });
 
     });
@@ -171,12 +194,10 @@ describe('authomator', function() {
     describe('#setRefreshToken(validToken)', function(){
 
       it('should set the refresh token', function(){
-
         var token = tokenOneEncoded;
         expect(authomator.getRefreshToken()).to.not.equal(tokenOneEncoded);
         authomator.setRefreshToken(token);
         expect(authomator.getRefreshToken()).to.equal(tokenOneEncoded);
-
       });
 
     });
