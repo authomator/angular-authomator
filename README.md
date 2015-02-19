@@ -110,7 +110,7 @@ authomator.removeRefreshToken();
 
 ```
 
-## jwtHelpers service
+## The jwtHelpers service
 
 The `jwtHelpers` service is mainly used internally but can also be injected anywhere in your application and exposes the following API:
 
