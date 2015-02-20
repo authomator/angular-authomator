@@ -93,6 +93,7 @@
      */
     this.init = function init(){
       this._listenForQueryStringKeys();
+      this._parseUrlOnInstantiation();
     };
 
     /**
@@ -102,20 +103,42 @@
     this._listenForQueryStringKeys = function listenForQueryStringKeys(){
       var self = this;
       $rootScope.$on('$locationChangeStart', function(event, newUrl, oldUrl){
-        var queryString = queryStringHelpers.parseQueryString(newUrl);
-        if(!queryString.hasOwnProperty(self._options.accessTokenQueryStringKey)){
-          return;
-        }
-        if(!queryString.hasOwnProperty(self._options.identityTokenQueryStringKey)){
-          return;
-        }
-        if(!queryString.hasOwnProperty(self._options.refreshTokenQueryStringKey)){
-          return;
-        }
-        self.setAccessToken(queryString[self._options.accessTokenQueryStringKey]);
-        self.setIdentityToken(queryString[self._options.identityTokenQueryStringKey]);
-        self.setRefreshToken(queryString[self._options.refreshTokenQueryStringKey]);
+        self._updateTokensFromQueryString(newUrl);
       });
+    };
+
+    /**
+     * Parse current URL when service is instantiated
+     *
+     * This allows tokens to be access during run phase
+     * in AngularJS apps
+     */
+    this._parseUrlOnInstantiation = function parseUrlOnInstantiation(){
+      var url = $location.absUrl();
+      this._updateTokensFromQueryString(url);
+    };
+
+    /**
+     * Update tokens using the query string parameters of a URL
+     *
+     * @param url
+     * @returns {AuthomatorService} self
+     */
+    this._updateTokensFromQueryString = function updateTokensFromQueryString(url){
+      var queryString = queryStringHelpers.parseQueryString(url);
+      if(!queryString.hasOwnProperty(this._options.accessTokenQueryStringKey)){
+        return;
+      }
+      if(!queryString.hasOwnProperty(this._options.identityTokenQueryStringKey)){
+        return;
+      }
+      if(!queryString.hasOwnProperty(this._options.refreshTokenQueryStringKey)){
+        return;
+      }
+      this.setAccessToken(queryString[this._options.accessTokenQueryStringKey]);
+      this.setIdentityToken(queryString[this._options.identityTokenQueryStringKey]);
+      this.setRefreshToken(queryString[this._options.refreshTokenQueryStringKey]);
+      return this;
     };
 
     /**
@@ -236,6 +259,10 @@
       return prefix + url;
     };
 
+    /**
+     * Initialize authomator upon instantiation
+     */
+    this.init();
   }
 
   /**
